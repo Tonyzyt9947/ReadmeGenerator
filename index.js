@@ -10,6 +10,18 @@ const questions = [
       name: 'name',
       message: '(Required) Enter your name:',
     },
+    // Name of developer
+    {
+        type: 'input',
+        name: 'email',
+        message: '(Required) Enter your email address:',
+    },
+    // Name of developer
+    {
+        type: 'input',
+        name: 'github',
+        message: '(Required) Enter your github username:',
+    },
     // Project Title
     {
       type: 'input',
@@ -46,7 +58,7 @@ const questions = [
         type: 'input',
         name: 'installation3',
         when(answers){
-            return (answers.installation2!= "skip")
+            return (answers.installation2.toLowerCase()!= "skip")
         },
         message: 'Enter instruction for project installation (Step 3).Or enter skip to skip this question.',
     },
@@ -66,7 +78,7 @@ const questions = [
         type: 'input',
         name: 'credits1Git',
         when(answers){
-            return (answers.credits1Name!= "skip")
+            return (answers.credits1Name.toLowerCase()!= "skip")
         },
         message: '(Required) Enter the github url of your first collaborator:'
       },
@@ -74,7 +86,7 @@ const questions = [
         type: 'input',
         name: 'credits2Name',
         when(answers){
-            return (answers.credits1Name!= "skip")
+            return (answers.credits1Name.toLowerCase()!= "skip")
         },
         message: 'Enter the name of your second collaborator. Or enter skip to skip this question.'
     },
@@ -82,7 +94,7 @@ const questions = [
         type: 'input',
         name: 'credits2Git',
         when(answers){
-            return (answers.credits2Name!= "skip")
+            return (answers.credits2Name.toLowerCase()!= "skip")
         },
         message: '(Required) Enter the girhub url of your second collaborator.'
     },
@@ -90,7 +102,7 @@ const questions = [
         type: 'input',
         name: 'credits3Name',
         when(answers){
-            return (answers.credits2Name!= "skip")
+            return (answers.credits2Name.toLowerCase()!= "skip")
         },
         message: 'Enter the name of your third collaborator. Or enter skip to skip this question.'
     },
@@ -98,7 +110,7 @@ const questions = [
         type: 'input',
         name: 'credits3Git',
         when(answers){
-            return (answers.credits2Name!= "skip" && answers.credits3Name!= "skip")
+            return (answers.credits2Name.toLowerCase()!= "skip" && answers.credits3Name.toLowerCase()!= "skip")
         },
         message: '(Required) Enter the girhub url of your third collaborator:'
     },
@@ -129,7 +141,7 @@ const questions = [
           type: 'input',
           name: 'feature2Desc',
           when(answers){
-              return (answers.feature2Title!= "skip")
+              return (answers.feature2Title.toLowerCase()!= "skip")
           },
           message: '(Required) Enter a description for the second feature:'
       },
@@ -137,7 +149,7 @@ const questions = [
           type: 'input',
           name: 'feature3Title',
           when(answers){
-              return (answers.feature2Title!= "skip")
+              return (answers.feature2Title.toLowerCase()!= "skip")
           },
           message: 'Enter a concise title for the third feature. Or enter skip to skip this question.'
       },
@@ -145,7 +157,7 @@ const questions = [
           type: 'input',
           name: 'feature3Desc',
           when(answers){
-              return (answers.feature2Title!= "skip" && answers.feature3Title!= "skip")
+              return (answers.feature2Title.toLowerCase()!= "skip" && answers.feature3Title.toLowerCase()!= "skip")
           },
           message: '(Required) Enter a description for the third feature:'
       },
@@ -178,7 +190,7 @@ const questions = [
         type: 'input',
         name: 'test3',
         when(answers){
-            return (answers.test2 != 'skip')
+            return (answers.test2.toLowerCase() != 'skip')
             },
         message: 'Enter third test for the project. Or enter skip to skip this question.'
       },   
@@ -194,6 +206,8 @@ function init() {
     const formattedAnswer = {
         name: answers.name,
         title: answers.title,
+        github: answers.github,
+        email: answers.email,
         description: answers.description,
         badge: ()=>{
             switch(answers.license){
@@ -214,7 +228,7 @@ function init() {
         installation1: answers.installation1,
         installation2: ()=>{
             if(answers.installation2 && answers.installation2.toLowerCase()!='skip'){
-                return answers.installation2
+                return `2. ${answers.installation2}`
             }
             else{
                 return " "
@@ -222,7 +236,7 @@ function init() {
         },
         installation3: ()=>{
             if(answers.installation3 && answers.installation3.toLowerCase()!='skip'){
-                return answers.installation3
+                return `3. ${answers.installation3}`
             }
             else{
                 return " "
@@ -231,8 +245,10 @@ function init() {
         usage: answers.usage,
         credits1: ()=>{
             if(answers.credits1Name && answers.credits1Name.toLowerCase()!='skip'){
-                let credits1 = `## Credits
-                ${answers.credits1Name}, [Github](${answers.credits1Git})`
+                let credits1 = 
+`## Credits
+* ${answers.credits1Name}, [Github](${answers.credits1Git})`
+
             return credits1
             }
             else{
@@ -241,8 +257,8 @@ function init() {
         },
         credits2: ()=>{
             if(answers.credits2Name && answers.credits2Name.toLowerCase()!='skip'){
-                let credits2 = `## Credits
-                ${answers.credits2Name}, [Github](${answers.credits2Git})`
+                let credits2 = 
+`* ${answers.credits2Name}, [Github](${answers.credits2Git})`
             return credits2
             }
             else{
@@ -251,8 +267,8 @@ function init() {
         },
         credits3: ()=>{
             if(answers.credits3Name && answers.credits3Name.toLowerCase()!='skip'){
-                let credits3 = `## Credits
-                ${answers.credits3Name}, [Github](${answers.credits3Git})`
+                let credits3 = 
+`* ${answers.credits3Name}, [Github](${answers.credits3Git})`
             return credits3
             }
             else{
@@ -261,13 +277,14 @@ function init() {
         },
         license: answers.license,
         feature1: 
-            `###${answers.feature1Title} 
-            ${answers.feature1Desc}`,
+`### ${answers.feature1Title} 
+${answers.feature1Desc}`,
+
         feature2: ()=>{
             if(answers.feature2Title && answers.feature2Title.toLowerCase()!='skip'){
                 let feature2 = 
-                `###${answers.feature2Title} 
-                ${answers.feature2Desc}`,
+`### ${answers.feature2Title} 
+${answers.feature2Desc}`
 
                 return feature2
             }
@@ -278,8 +295,8 @@ function init() {
         feature3: ()=>{
             if(answers.feature3Title && answers.feature3Title.toLowerCase()!='skip'){
                 let feature3 = 
-                `###${answers.feature3Title} 
-                ${answers.feature3Desc}`,
+`### ${answers.feature3Title} 
+${answers.feature3Desc}`
 
                 return feature3
             }
@@ -290,8 +307,8 @@ function init() {
         contribution: ()=>{
             if(answers.contributionConfirm && answers.contributionSteps){
                 let contribution = 
-                `## Contributing
-                ${answers.contributionSteps}`,
+`## Contributing
+${answers.contributionSteps}`
 
                 return contribution
             }
@@ -302,7 +319,10 @@ function init() {
         test1: answers.test1,
         test2: ()=>{
             if(answers.test2 && answers.test2.toLowerCase()!='skip'){
-                return answers.test2
+                let test2 =
+`### Test2
+${answers.test2}`
+                return test2
             }
             else{
                 return " "
@@ -310,7 +330,10 @@ function init() {
         },
         test3: ()=>{
             if(answers.test3 && answers.test3.toLowerCase()!='skip'){
-                return answers.test3
+                let test3 =
+`### Test3
+${answers.test3}`
+                return test3
             }
             else{
                 return " "
@@ -319,13 +342,14 @@ function init() {
         tableContents: ()=>{
             if(answers.tableContents){
                 let table = 
-                `## Table of Contents
-                * [Installation](#installation)
-                * [Usage](#usage)
-                * [Credits](#credits)
-                * [License](#license)
-                * [Features](#features)
-                * [Tests](#tests)`
+`## Table of Contents
+* [Installation](#installation)
+* [Usage](#usage)
+* [Credits](#credits)
+* [License](#license)
+* [Features](#features)
+* [Tests](#tests)
+* [Contacts](#questions)`
                 
                 return table
             }
@@ -336,50 +360,61 @@ function init() {
       }
 
     const readmeContent = 
-    `# ${formattedAnswer.title} ${formattedAnswer.badge()}
+`# ${formattedAnswer.title} ${formattedAnswer.badge()}
 
-    ## Description 
+## Description 
     
-    ${formattedAnswer.description}
+${formattedAnswer.description}
 
-    ${formattedAnswer.tableContents()}
+${formattedAnswer.tableContents()}
     
-    ## Installation
+## Installation
     
-    ${formattedAnswer.installation1}
-    ${formattedAnswer.installation2()}
-    ${formattedAnswer.installation3}
-    
-    ## Usage 
-    
-    ${formattedAnswer.usage}
-    
-    ${formattedAnswer.credits1}
-    ${formattedAnswer.credits2}
-    ${formattedAnswer.credits3}
-    
-    ## License
-    
-    This project is licensed by ${formattedAnswer.license}.
-    
-    ## Features
+1. ${formattedAnswer.installation1}
 
-    ${formattedAnswer.feature1}
-    ${formattedAnswer.feature2}
-    ${formattedAnswer.feature3}
+${formattedAnswer.installation2()}
 
-    ${formattedAnswer.contribution}
+${formattedAnswer.installation3()}
     
-    ## Tests
+## Usage 
     
-    ### Test 1
-    ${formattedAnswer.test1}
-    ### Test 2
-    ${formattedAnswer.test2}
-    ### Test 3
-    ${formattedAnswer.test3}`
+${formattedAnswer.usage}
     
-    let filename = formattedAnswer.title+"_README.md"
+${formattedAnswer.credits1()}
+${formattedAnswer.credits2()}
+${formattedAnswer.credits3()}
+
+## License
+    
+This project is licensed by ${formattedAnswer.license}.
+    
+## Features
+
+${formattedAnswer.feature1}
+
+${formattedAnswer.feature2()}
+
+${formattedAnswer.feature3()}
+
+${formattedAnswer.contribution()}
+    
+## Tests
+    
+### Test 1
+${formattedAnswer.test1}
+
+${formattedAnswer.test2()}
+
+${formattedAnswer.test3()}
+
+## Questions
+
+You can reach me (${formattedAnswer.name}) at:
+Email: [Link](${formattedAnswer.email})
+Github: [Link](https://github.com/${formattedAnswer.github})
+`
+    
+    let fileName = formattedAnswer.title+"_README.md"
      // TODO: Create a function to write README file
     fs.writeFile(fileName, readmeContent, (err) =>
     err ? console.error(err) : console.log('File Created')
